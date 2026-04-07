@@ -1,0 +1,594 @@
+{
+  "datasets": [
+    {
+      "name": "2f4d5f4e",
+      "displayName": "Sales Overview",
+      "queryLines": [
+        "SELECT \n",
+        "    COUNT(*) as total_transactions,\n",
+        "    COUNT(DISTINCT customerID) as unique_customers,\n",
+        "    COUNT(DISTINCT franchiseID) as unique_franchises,\n",
+        "    COUNT(DISTINCT product) as unique_products,\n",
+        "    SUM(totalPrice) as total_revenue,\n",
+        "    SUM(quantity) as total_items_sold\n",
+        "FROM sales_transactions"
+      ],
+      "catalog": "samples",
+      "schema": "bakehouse"
+    },
+    {
+      "name": "7b203642",
+      "displayName": "Hourly Sales Pattern",
+      "queryLines": [
+        "SELECT \n",
+        "    HOUR(dateTime) as hour_of_day,\n",
+        "    COUNT(*) as num_transactions,\n",
+        "    SUM(totalPrice) as total_revenue\n",
+        "FROM sales_transactions\n",
+        "GROUP BY HOUR(dateTime)\n",
+        "ORDER BY hour_of_day"
+      ],
+      "catalog": "samples",
+      "schema": "bakehouse"
+    },
+    {
+      "name": "74deda8a",
+      "displayName": "Payment Methods",
+      "queryLines": [
+        "SELECT \n",
+        "    paymentMethod,\n",
+        "    COUNT(*) as num_transactions,\n",
+        "    SUM(totalPrice) as total_revenue\n",
+        "FROM sales_transactions\n",
+        "GROUP BY paymentMethod\n",
+        "ORDER BY num_transactions DESC"
+      ],
+      "catalog": "samples",
+      "schema": "bakehouse"
+    },
+    {
+      "name": "ee3f58b5",
+      "displayName": "Daily Sales Trend",
+      "queryLines": [
+        "SELECT \n",
+        "    DATE(dateTime) as transaction_date,\n",
+        "    SUM(totalPrice) as daily_revenue,\n",
+        "    COUNT(*) as num_transactions,\n",
+        "    SUM(quantity) as items_sold\n",
+        "FROM sales_transactions\n",
+        "GROUP BY DATE(dateTime)\n",
+        "ORDER BY transaction_date"
+      ],
+      "catalog": "samples",
+      "schema": "bakehouse"
+    },
+    {
+      "name": "5fbe4785",
+      "displayName": "Sales by Product",
+      "queryLines": [
+        "SELECT \n",
+        "    product,\n",
+        "    SUM(totalPrice) as total_revenue,\n",
+        "    SUM(quantity) as total_quantity,\n",
+        "    COUNT(*) as num_transactions\n",
+        "FROM sales_transactions\n",
+        "GROUP BY product\n",
+        "ORDER BY total_revenue DESC"
+      ],
+      "catalog": "samples",
+      "schema": "bakehouse"
+    }
+  ],
+  "pages": [
+    {
+      "name": "d40f6fb9",
+      "displayName": "Sales Analysis",
+      "layout": [
+        {
+          "widget": {
+            "name": "title",
+            "multilineTextboxSpec": {
+              "lines": [
+                "# 📊 Sales Dashboard\n",
+                "\n",
+                "Comprehensive analysis of Bakehouse sales transactions from May 2024"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "revenue_counter",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "2f4d5f4e",
+                  "fields": [
+                    {
+                      "name": "total_revenue",
+                      "expression": "`total_revenue`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "💰 Total Revenue",
+                "showTitle": true
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "total_revenue",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 0
+                    },
+                    "abbreviation": "compact"
+                  },
+                  "displayName": "Total Revenue"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "transactions_counter",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "2f4d5f4e",
+                  "fields": [
+                    {
+                      "name": "total_transactions",
+                      "expression": "`total_transactions`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "🧾 Total Transactions",
+                "showTitle": true
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "total_transactions",
+                  "format": {
+                    "type": "number-plain",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 0
+                    },
+                    "abbreviation": "compact"
+                  },
+                  "displayName": "Transactions"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "customers_counter",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "2f4d5f4e",
+                  "fields": [
+                    {
+                      "name": "unique_customers",
+                      "expression": "`unique_customers`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "👥 Unique Customers",
+                "showTitle": true
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "unique_customers",
+                  "format": {
+                    "type": "number-plain",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 0
+                    },
+                    "abbreviation": "none"
+                  },
+                  "displayName": "Customers"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "products_counter",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "2f4d5f4e",
+                  "fields": [
+                    {
+                      "name": "unique_products",
+                      "expression": "`unique_products`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "🥐 Product Types",
+                "showTitle": true
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "unique_products",
+                  "format": {
+                    "type": "number-plain",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 0
+                    },
+                    "abbreviation": "none"
+                  },
+                  "displayName": "Products"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 9,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "daily_trend",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ee3f58b5",
+                  "fields": [
+                    {
+                      "name": "transaction_date",
+                      "expression": "`transaction_date`"
+                    },
+                    {
+                      "name": "daily_revenue",
+                      "expression": "`daily_revenue`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "📈 Daily Sales Trend",
+                "showTitle": true
+              },
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "transaction_date",
+                  "displayName": "Date",
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "daily_revenue",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 0
+                    },
+                    "abbreviation": "compact"
+                  },
+                  "displayName": "Revenue",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 5,
+            "width": 12,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "product_sales",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "5fbe4785",
+                  "fields": [
+                    {
+                      "name": "product",
+                      "expression": "`product`"
+                    },
+                    {
+                      "name": "total_revenue",
+                      "expression": "`total_revenue`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "🥐 Sales by Product",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "product",
+                  "displayName": "Product",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "y-reversed"
+                    }
+                  }
+                },
+                "y": {
+                  "fieldName": "total_revenue",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 0
+                    },
+                    "abbreviation": "compact"
+                  },
+                  "displayName": "Revenue",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 10,
+            "width": 6,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "payment_methods",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "74deda8a",
+                  "fields": [
+                    {
+                      "name": "num_transactions",
+                      "expression": "`num_transactions`"
+                    },
+                    {
+                      "name": "paymentMethod",
+                      "expression": "`paymentMethod`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "💳 Payment Methods",
+                "showTitle": true
+              },
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "num_transactions",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "format": {
+                    "type": "number-plain",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 0
+                    },
+                    "abbreviation": "none"
+                  },
+                  "displayName": "Transactions"
+                },
+                "color": {
+                  "fieldName": "paymentMethod",
+                  "legend": {
+                    "position": "right"
+                  },
+                  "displayName": "Payment Method",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 10,
+            "width": 6,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "hourly_pattern",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "7b203642",
+                  "fields": [
+                    {
+                      "name": "hour_of_day",
+                      "expression": "`hour_of_day`"
+                    },
+                    {
+                      "name": "total_revenue",
+                      "expression": "`total_revenue`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "⏰ Hourly Sales Pattern",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "hour_of_day",
+                  "displayName": "Hour",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "total_revenue",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 0
+                    },
+                    "abbreviation": "compact"
+                  },
+                  "displayName": "Revenue",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 15,
+            "width": 12,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "combo_trend",
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {}
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 20,
+            "width": 12,
+            "height": 5
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "2d4cbc19",
+      "displayName": "Untitled page",
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}

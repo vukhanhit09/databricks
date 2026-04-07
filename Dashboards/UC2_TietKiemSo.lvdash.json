@@ -1,0 +1,1817 @@
+{
+  "datasets": [
+    {
+      "name": "9f153370",
+      "displayName": "rpt_khcn_hdv_d09_dgtal_svg",
+      "queryLines": [
+        "SELECT * FROM mb_poc.gold.rpt_khcn_hdv_d09_dgtal_svg WHERE `CDR_DT` = :p_date"
+      ],
+      "parameters": [
+        {
+          "displayName": "Ngày báo cáo",
+          "keyword": "p_date",
+          "dataType": "DATE",
+          "defaultSelection": {
+            "values": {
+              "dataType": "DATE",
+              "values": [
+                {
+                  "value": "2025-06-30T00:00:00.000"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "b9aedf2d",
+      "displayName": "DS_TKS_MoMoi",
+      "queryLines": [
+        "SELECT \r\n",
+        "round(\r\n",
+        "  try_divide(\r\n",
+        "    SUM(\r\n",
+        "      CASE\r\n",
+        "        WHEN `CHANNEL` = 'KENH_SO' THEN `NEW_OPN_TVR_MTD`\r\n",
+        "        ELSE 0\r\n",
+        "      END\r\n",
+        "    ),\r\n",
+        "    SUM(`NEW_OPN_TVR_MTD`)\r\n",
+        "  ),2) AS ty_le_chuyen_dich_doanh_so_tks_moi,\r\n",
+        "  SUM(`NEW_OPN_TVR_MTD`) as doanh_so_tks_moi\r\n",
+        "FROM\r\n",
+        "  `mb_poc`.`gold`.`rpt_khcn_hdv_d09_dgtal_svg`\r\n",
+        "WHERE\r\n",
+        "  `NEW_OPN_TVR_MTD` IS NOT NULL\r\n",
+        "  AND `CHANNEL` IS NOT NULL and `CDR_DT` = :p_date"
+      ],
+      "parameters": [
+        {
+          "displayName": "Ngày chạy báo cáo",
+          "keyword": "p_date",
+          "dataType": "DATE",
+          "defaultSelection": {
+            "values": {
+              "dataType": "DATE",
+              "values": [
+                {
+                  "value": "2025-06-30T00:00:00.000"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "catalog": "mb_poc",
+      "schema": "gold"
+    },
+    {
+      "name": "c168f30a",
+      "displayName": "SLKH_MoMoi",
+      "queryLines": [
+        "SELECT\r\n",
+        "  round(\r\n",
+        "  try_divide(\r\n",
+        "    SUM(\r\n",
+        "      CASE\r\n",
+        "        WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_NEW_AC_CST_TDY`\r\n",
+        "        ELSE 0\r\n",
+        "      END\r\n",
+        "    ),\r\n",
+        "    SUM(`NBR_OF_NEW_AC_CST_TDY`)\r\n",
+        "  ),2) AS ty_le_chuyen_dich_slkh_moi_ngay\r\n",
+        "FROM\r\n",
+        "  `mb_poc`.`gold`.`rpt_khcn_hdv_d09_dgtal_svg`\r\n",
+        "WHERE\r\n",
+        "  `CDR_DT` IS NOT NULL\r\n",
+        "  AND `NBR_OF_NEW_AC_CST_TDY` IS NOT NULL\r\n",
+        "  AND `CHANNEL` IS NOT NULL and `CDR_DT`= :p_date"
+      ],
+      "parameters": [
+        {
+          "displayName": "Ngày báo cáo",
+          "keyword": "p_date",
+          "dataType": "DATE",
+          "defaultSelection": {
+            "values": {
+              "dataType": "DATE",
+              "values": [
+                {
+                  "value": "now/d"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "d1933e7a",
+      "displayName": "SoDu_TKS",
+      "queryLines": [
+        "SELECT\r\n",
+        "  round(\r\n",
+        "  try_divide(\r\n",
+        "    SUM(\r\n",
+        "      CASE\r\n",
+        "        WHEN `CHANNEL` = 'KENH_SO' THEN `CLS_BOOK_BAL`\r\n",
+        "        ELSE 0\r\n",
+        "      END\r\n",
+        "    ),\r\n",
+        "    SUM(`CLS_BOOK_BAL`)\r\n",
+        "  ),2) AS ty_le_chuyen_dich_so_du_tks_ngay\r\n",
+        "FROM\r\n",
+        "  `mb_poc`.`gold`.`rpt_khcn_hdv_d09_dgtal_svg`\r\n",
+        "WHERE\r\n",
+        "  `CDR_DT` IS NOT NULL\r\n",
+        "  AND `CLS_BOOK_BAL` IS NOT NULL\r\n",
+        "  AND `CHANNEL` IS NOT NULL\r\n",
+        "  AND `PD_TP` = 'TGTK' and `CDR_DT` = :p_date"
+      ],
+      "parameters": [
+        {
+          "displayName": "Ngyaf báo cáo",
+          "keyword": "p_date",
+          "dataType": "DATE",
+          "defaultSelection": {
+            "values": {
+              "dataType": "DATE",
+              "values": [
+                {
+                  "value": "now/d"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5c75bc6f",
+      "displayName": "TongQuan_By_Date",
+      "queryLines": [
+        "SELECT `CST_GRP`,\r\n",
+        "--Chuyển dịch doanh số\r\n",
+        "    SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NEW_OPN_TVR_TDY` ELSE 0 END) as DS_TKS_MoMoi, \r\n",
+        "    round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NEW_OPN_TVR_TDY` ELSE 0 END),SUM(`NEW_OPN_TVR_TDY`)),2) as DS_TLCD_TKS,\r\n",
+        "    SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_NEW_AC_CST_TDY` ELSE 0 END) as DS_SLKH_MoMoi, \r\n",
+        "    round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_NEW_AC_CST_TDY` ELSE 0 END),SUM(`NBR_OF_NEW_AC_CST_TDY`)),2) as DS_TLCD_SLKH,\r\n",
+        "    SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_NEW_AC_TDY` ELSE 0 END) as DS_SLS_MoMoi, \r\n",
+        "    round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_NEW_AC_TDY` ELSE 0 END),SUM(`NBR_OF_NEW_AC_TDY`)),2) as DS_TLCD_SLS,\r\n",
+        "    --Tỷ lệ chuyển dịch doanh số TKS\r\n",
+        "    round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NEW_OPN_TVR_TDY` ELSE 0 END),SUM(`NEW_OPN_TVR_TDY`)),2) as DS_Per_DS_SoTo,\r\n",
+        "    round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NEW_OPN_TVR_TDY` ELSE 0 END),SUM(`NEW_OPN_TVR_TDY`)) \r\n",
+        "      - try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NEW_OPN_TVR_YST` ELSE 0 END),SUM(`NEW_OPN_TVR_YST`)),2) as DS_Per_DS_Prv,\r\n",
+        "    round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NEW_OPN_TVR_MTD` ELSE 0 END),SUM(`NEW_OPN_TVR_MTD`))\r\n",
+        "      - try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NEW_OPN_TVR_PRE_MO` ELSE 0 END),SUM(`NEW_OPN_TVR_PRE_MO`)),2) as DS_Per_DS_CKTT,\r\n",
+        "    --Tỷ lệ chuyển dịch khách hàng\r\n",
+        "    round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_NEW_AC_CST_TDY` ELSE 0 END),SUM(`NBR_OF_NEW_AC_CST_TDY`)),2) as DS_Per_KH_SoTo,\r\n",
+        "    round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_NEW_AC_CST_TDY` ELSE 0 END),SUM(`NBR_OF_NEW_AC_CST_TDY`)) \r\n",
+        "      - try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_NEW_AC_CST_YST` ELSE 0 END),SUM(`NBR_OF_NEW_AC_CST_YST`)),2) as DS_Per_KH_Prv,\r\n",
+        "    round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_NEW_AC_CST_MTD` ELSE 0 END),SUM(`NBR_OF_NEW_AC_CST_MTD`))\r\n",
+        "      - try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_NEW_AC_CST_PRE_MO` ELSE 0 END),SUM(`NBR_OF_NEW_AC_CST_PRE_MO`)),2) as DS_Per_KH_CKTT,\r\n",
+        "    --Tỷ lệ chuyển dịch TKS mở mới\r\n",
+        "    round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_NEW_AC_TDY` ELSE 0 END),SUM(`NBR_OF_NEW_AC_TDY`)),2) as DS_Per_TKS_SoTo,\r\n",
+        "    round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_NEW_AC_TDY` ELSE 0 END),SUM(`NBR_OF_NEW_AC_TDY`)) \r\n",
+        "      - try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_NEW_AC_YST` ELSE 0 END),SUM(`NBR_OF_NEW_AC_YST`)),2) as DS_Per_TKS_Prv,\r\n",
+        "    round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_NEW_AC_MTD` ELSE 0 END),SUM(`NBR_OF_NEW_AC_MTD`))\r\n",
+        "      - try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_NEW_AC_PRE_MO` ELSE 0 END),SUM(`NBR_OF_NEW_AC_PRE_MO`)),2) as DS_Per_TKS_CKTT,\r\n",
+        "-- Chuyển dịch số dư\r\n",
+        "    --Chuyển dịch số dư TKS mở mới\r\n",
+        "    SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `CLS_BOOK_BAL` ELSE 0 END) as SoDu_TKS_SoDu, \r\n",
+        "    round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `CLS_BOOK_BAL` ELSE 0 END),SUM(`CLS_BOOK_BAL`)),2) as SoDu_Per_TKS_SoDu,\r\n",
+        "    --Chuyển dịch khách hàng mở mới TKS\r\n",
+        "    SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_TVR_CST_TDY` ELSE 0 END) as SoDu_KH, \r\n",
+        "    round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_TVR_CST_TDY` ELSE 0 END),SUM(`NBR_OF_TVR_CST_TDY`)),2) as SoDu_Per_KH,\r\n",
+        "    --Chuyển dịch TKS mở mới\r\n",
+        "    SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_NEW_AC_TDY` ELSE 0 END) as SoDu_TKS, \r\n",
+        "    round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_NEW_AC_TDY` ELSE 0 END),SUM(`NBR_OF_NEW_AC_TDY`)),2) as SoDu_Per_TKS,\r\n",
+        "    --Tỷ lệ chuyển dịch số dư\r\n",
+        "    round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `CLS_BOOK_BAL` ELSE 0 END),SUM(`CLS_BOOK_BAL`))\r\n",
+        "      - try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `CLS_BOOK_BAL_LST_MO` ELSE 0 END),SUM(`CLS_BOOK_BAL_LST_MO`)),2) as SoDu_Per_SoDu_Prv,\r\n",
+        "    round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `CLS_BOOK_BAL` ELSE 0 END),SUM(`CLS_BOOK_BAL`))\r\n",
+        "      - try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `CLS_BOOK_BAL_LST_YR` ELSE 0 END),SUM(`CLS_BOOK_BAL_LST_YR`)),2) as SoDu_Per_SoDu_Prv_Year,\r\n",
+        "    --Tỷ lệ chuyển dịch khách hàng\r\n",
+        "    round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_TVR_CST_TDY` ELSE 0 END),SUM(`NBR_OF_TVR_CST_TDY`))\r\n",
+        "      - try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_TVR_CST_LST_MO` ELSE 0 END),SUM(`NBR_OF_TVR_CST_LST_MO`)),2) as SoDu_Per_KH_Prv,\r\n",
+        "    round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_TVR_CST_TDY` ELSE 0 END),SUM(`NBR_OF_TVR_CST_TDY`))\r\n",
+        "      - try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_TVR_CST_LST_YR` ELSE 0 END),SUM(`NBR_OF_TVR_CST_LST_YR`)),2) as SoDu_Per_KH_Prv_Year,\r\n",
+        "    --Tỷ lệ chuyển dịch TKS\r\n",
+        "    round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_AC_W_BAL_TDY` ELSE 0 END),SUM(`NBR_OF_AC_W_BAL_TDY`)),2) as SoDu_Per_TKS_SoTo,\r\n",
+        "    round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_AC_W_BAL_TDY` ELSE 0 END),SUM(`NBR_OF_AC_W_BAL_TDY`))\r\n",
+        "      - try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_AC_W_BAL_LST_MO` ELSE 0 END),SUM(`NBR_OF_AC_W_BAL_LST_MO`)),2) as SoDu_Per_TKS_Prv,\r\n",
+        "    round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_AC_W_BAL_TDY` ELSE 0 END),SUM(`NBR_OF_AC_W_BAL_TDY`))\r\n",
+        "      - try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_AC_W_BAL_LST_YR` ELSE 0 END),SUM(`NBR_OF_AC_W_BAL_LST_YR`)),2) as SoDu_Per_TKS_Prv_Year\r\n",
+        "FROM\r\n",
+        "  `mb_poc`.`gold`.`rpt_khcn_hdv_d09_dgtal_svg`\r\n",
+        "WHERE `CDR_DT`= :p_date AND (:p_sp is null or array_contains(:p_sp,`PD_TP`))\r\n",
+        "  AND (:p_khoi is null or array_contains(:p_khoi,`CST_LOB_NM`))\r\n",
+        "  AND (:p_phankhuc is null or array_contains(:p_phankhuc,`CST_GRP`))\r\n",
+        "  AND (:p_nhomtuoi is null or array_contains(:p_nhomtuoi,`GRP_AGE`))\r\n",
+        "group by `CST_GRP`\r\n",
+        "\r\n",
+        "\r\n",
+        "  \r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n"
+      ],
+      "parameters": [
+        {
+          "displayName": "Ngày báo cáo",
+          "keyword": "p_date",
+          "dataType": "DATE",
+          "defaultSelection": {
+            "values": {
+              "dataType": "DATE",
+              "values": [
+                {
+                  "value": "2025-06-30T00:00:00.000"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "displayName": "Sản phẩm",
+          "keyword": "p_sp",
+          "dataType": "STRING",
+          "complexType": "MULTI",
+          "defaultSelection": {
+            "operator": {
+              "operator": "AND"
+            }
+          }
+        },
+        {
+          "displayName": "Khối",
+          "keyword": "p_khoi",
+          "dataType": "STRING",
+          "complexType": "MULTI",
+          "defaultSelection": {
+            "operator": {
+              "operator": "AND"
+            }
+          }
+        },
+        {
+          "displayName": "Phân Khúc",
+          "keyword": "p_phankhuc",
+          "dataType": "STRING",
+          "complexType": "MULTI",
+          "defaultSelection": {
+            "operator": {
+              "operator": "AND"
+            }
+          }
+        },
+        {
+          "displayName": "Nhóm tuổi",
+          "keyword": "p_nhomtuoi",
+          "dataType": "STRING",
+          "complexType": "MULTI",
+          "defaultSelection": {
+            "operator": {
+              "operator": "AND"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "b22f93ec",
+      "displayName": "ChiTiet_By_Date",
+      "queryLines": [
+        "SELECT `SUB_RGON`,`CST_GRP`,`TERM_TP`,`AR_RNG`, SUM(`NEW_OPN_TVR_TDY`) as Tong_DS, SUM(`NBR_OF_NEW_AC_CST_TDY`) as SLKH, SUM(`NBR_OF_NEW_AC_TDY`) as SLS, \r\n",
+        "  SUM(CASE WHEN `CHANNEL` = 'KENH_QUAY' AND `SPCL_INT_RATE_F` = 'N' THEN `NEW_OPN_TVR_TDY` ELSE 0 END) as DS_SP_Quay_LS_Thuong, \r\n",
+        "  SUM(CASE WHEN `CHANNEL` = 'KENH_QUAY' AND `SPCL_INT_RATE_F` = 'Y' THEN `NEW_OPN_TVR_TDY` ELSE 0 END) as DS_SP_Quay_LS_Hotline,\r\n",
+        "  round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_QUAY' AND `SPCL_INT_RATE_F` = 'Y' THEN `NEW_OPN_TVR_TDY` ELSE 0 END) ,SUM(`NEW_OPN_TVR_TDY`)),2) as DS_SP_Quay_LS_TyLe_HotLine,\r\n",
+        "  SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NEW_OPN_TVR_TDY` ELSE 0 END) as DS_SP_So, \r\n",
+        "  SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_NEW_AC_CST_TDY` ELSE 0 END) as SLKH_SP_So,\r\n",
+        "  SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_NEW_AC_TDY` ELSE 0 END) as DS_SP_So_SLS, \r\n",
+        "  round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NEW_OPN_TVR_TDY` ELSE 0 END) ,SUM(`NEW_OPN_TVR_TDY`)),2) as TyLe_ChuyenDich_SP_So_All_DS,\r\n",
+        "  round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_NEW_AC_CST_TDY` ELSE 0 END) ,SUM(`NBR_OF_NEW_AC_CST_TDY`)),2) as TyLe_ChuyenDich_SP_So_All_SLKH,\r\n",
+        "  round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_NEW_AC_TDY` ELSE 0 END) ,SUM(`NBR_OF_NEW_AC_CST_TDY`)),2) as TyLe_ChuyenDich_SP_So_All_SLS,\r\n",
+        "  round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NEW_OPN_TVR_YST` ELSE 0 END) ,SUM(`NEW_OPN_TVR_YST`)),2) as TyLe_ChuyenDich_SP_So_All_DS_Prv_MO,\r\n",
+        "  round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_NEW_AC_CST_YST` ELSE 0 END) ,SUM(`NBR_OF_NEW_AC_CST_YST`)),2) as TyLe_ChuyenDich_SP_So_All_SLKH_Prv_MO,\r\n",
+        "  round(try_divide(SUM(CASE WHEN `CHANNEL` = 'KENH_SO' THEN `NBR_OF_NEW_AC_YST` ELSE 0 END) ,SUM(`NBR_OF_NEW_AC_CST_YST`)),2) as TyLe_ChuyenDich_SP_So_All_SLS_Prv_MO\r\n",
+        "    \r\n",
+        "FROM\r\n",
+        "  `mb_poc`.`gold`.`rpt_khcn_hdv_d09_dgtal_svg`\r\n",
+        "WHERE `CDR_DT`= :p_date  AND (:p_sp is null or array_contains(:p_sp,`PD_TP`))\r\n",
+        "  AND (:p_khoi is null or array_contains(:p_khoi,`CST_LOB_NM`))\r\n",
+        "  AND (:p_phankhuc is null or array_contains(:p_phankhuc,`CST_GRP`))\r\n",
+        "  AND (:p_nhomtuoi is null or array_contains(:p_nhomtuoi,`GRP_AGE`))\r\n",
+        "group by `SUB_RGON`,`CST_GRP`,`TERM_TP`,`AR_RNG`\r\n",
+        "ORDER BY `SUB_RGON`,`CST_GRP`,`TERM_TP`,`AR_RNG`\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n",
+        "\r\n"
+      ],
+      "parameters": [
+        {
+          "displayName": "Ngày báo cáo",
+          "keyword": "p_date",
+          "dataType": "DATE",
+          "defaultSelection": {
+            "values": {
+              "dataType": "DATE",
+              "values": [
+                {
+                  "value": "2025-06-30T00:00:00.000"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "displayName": "p_sp",
+          "keyword": "p_sp",
+          "dataType": "STRING",
+          "complexType": "MULTI",
+          "defaultSelection": {
+            "operator": {
+              "operator": "AND"
+            }
+          }
+        },
+        {
+          "displayName": "p_khoi",
+          "keyword": "p_khoi",
+          "dataType": "STRING",
+          "complexType": "MULTI",
+          "defaultSelection": {
+            "operator": {
+              "operator": "AND"
+            }
+          }
+        },
+        {
+          "displayName": "p_phankhuc",
+          "keyword": "p_phankhuc",
+          "dataType": "STRING",
+          "complexType": "MULTI",
+          "defaultSelection": {
+            "operator": {
+              "operator": "AND"
+            }
+          }
+        },
+        {
+          "displayName": "p_nhomtuoi",
+          "keyword": "p_nhomtuoi",
+          "dataType": "STRING",
+          "complexType": "MULTI",
+          "defaultSelection": {
+            "operator": {
+              "operator": "AND"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "ff81d2bd",
+      "displayName": "DS_By_Month",
+      "queryLines": [
+        "SELECT\r\n",
+        "  --DATE_TRUNC('MONTH', `CDR_DT`) AS thoi_gian,\r\n",
+        "  date_format(`CDR_DT`, 'yyyy-MM') AS thoi_gian,\r\n",
+        "  SUM(\r\n",
+        "    CASE\r\n",
+        "      WHEN `CHANNEL` = 'KENH_SO' THEN `CLS_BOOK_BAL`\r\n",
+        "      ELSE 0\r\n",
+        "    END\r\n",
+        "  ) AS tong_so_du_tiet_kiem_so,\r\n",
+        "  SUM(\r\n",
+        "    CASE\r\n",
+        "      WHEN `PD_TP` = 'TGTK' THEN `CLS_BOOK_BAL`\r\n",
+        "      ELSE 0\r\n",
+        "    END\r\n",
+        "  ) AS tong_so_du_tiet_kiem,\r\n",
+        "  try_divide(\r\n",
+        "    100\r\n",
+        "      * SUM(\r\n",
+        "        CASE\r\n",
+        "          WHEN `CHANNEL` = 'KENH_SO' THEN `CLS_BOOK_BAL`\r\n",
+        "          ELSE 0\r\n",
+        "        END\r\n",
+        "      ),\r\n",
+        "    SUM(\r\n",
+        "      CASE\r\n",
+        "        WHEN `PD_TP` = 'TGTK' THEN `CLS_BOOK_BAL`\r\n",
+        "        ELSE 0\r\n",
+        "      END\r\n",
+        "    )\r\n",
+        "  ) AS ty_le_chuyen_dich\r\n",
+        "FROM\r\n",
+        "  `mb_poc`.`gold`.`rpt_khcn_hdv_d09_dgtal_svg`\r\n",
+        "WHERE\r\n",
+        "  `CLS_BOOK_BAL` IS NOT NULL\r\n",
+        "  AND year(`CDR_DT`) = year(:p_date)\r\n",
+        "GROUP BY\r\n",
+        "  --DATE_TRUNC('MONTH', `CDR_DT`)\r\n",
+        "  date_format(`CDR_DT`, 'yyyy-MM')\r\n",
+        "ORDER BY\r\n",
+        "  thoi_gian"
+      ],
+      "parameters": [
+        {
+          "displayName": "p_date",
+          "keyword": "p_date",
+          "dataType": "DATE",
+          "defaultSelection": {
+            "values": {
+              "dataType": "DATE",
+              "values": [
+                {
+                  "value": "2025-06-30T00:00:00.000"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "ae213f3c",
+      "displayName": "TongQuan",
+      "layout": [
+        {
+          "widget": {
+            "name": "chuyen-dich-tiet-kiem-so-mo-moi",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "5c75bc6f",
+                  "fields": [
+                    {
+                      "name": "CST_GRP",
+                      "expression": "`CST_GRP`"
+                    },
+                    {
+                      "name": "sum(DS_TLCD_TKS)",
+                      "expression": "SUM(`DS_TLCD_TKS`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Chuyển dịch tiết kiệm sổ mở mới",
+                "showTitle": true
+              },
+              "widgetType": "area",
+              "encodings": {
+                "x": {
+                  "fieldName": "CST_GRP",
+                  "axis": {
+                    "hideTitle": true,
+                    "labelAngle": 0
+                  },
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(DS_TLCD_TKS)",
+                  "axis": {
+                    "hideTitle": true
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 3,
+            "width": 4,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "chuyen-dich-khach-hang-mo-moi-tks",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "5c75bc6f",
+                  "fields": [
+                    {
+                      "name": "CST_GRP",
+                      "expression": "`CST_GRP`"
+                    },
+                    {
+                      "name": "sum(DS_TLCD_SLKH)",
+                      "expression": "SUM(`DS_TLCD_SLKH`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Chuyển dịch khách hàng mở mới TKS",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "CST_GRP",
+                  "axis": {
+                    "hideTitle": true
+                  },
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(DS_TLCD_SLKH)",
+                  "axis": {
+                    "hideTitle": true
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 3,
+            "width": 4,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "ty-le-chuyen-dich-doanh-so-tks-mo-moi",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "b9aedf2d",
+                  "fields": [
+                    {
+                      "name": "sum(doanh_so_tks_moi)",
+                      "expression": "SUM(`doanh_so_tks_moi`)"
+                    },
+                    {
+                      "name": "approx_percentile(ty_le_chuyen_dich_doanh_so_tks_moi, percentage=0_5)",
+                      "expression": "APPROX_PERCENTILE(`ty_le_chuyen_dich_doanh_so_tks_moi`, 0.5)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Tỷ lệ chuyển dịch doanh số TKS mở mới",
+                "showDescription": false,
+                "headerAlignment": "center"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "approx_percentile(ty_le_chuyen_dich_doanh_so_tks_moi, percentage=0_5)",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "all"
+                    },
+                    "significantFigures": {
+                      "type": "all"
+                    }
+                  }
+                },
+                "target": {
+                  "fieldName": "sum(doanh_so_tks_moi)",
+                  "change": {
+                    "type": "percent"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 1,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "ty-le-chuyen-dich-slk-mo-moi",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "c168f30a",
+                  "fields": [
+                    {
+                      "name": "approx_percentile(ty_le_chuyen_dich_slkh_moi_ngay, percentage=0_5)",
+                      "expression": "APPROX_PERCENTILE(`ty_le_chuyen_dich_slkh_moi_ngay`, 0.5)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "Tỷ lệ chuyển dịch SLKH mở mới",
+                "showTitle": true,
+                "headerAlignment": "center"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "approx_percentile(ty_le_chuyen_dich_slkh_moi_ngay, percentage=0_5)",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 1,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "ti-le-chuyen-dich-so-du-tiet-kiem-so",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "d1933e7a",
+                  "fields": [
+                    {
+                      "name": "approx_percentile(ty_le_chuyen_dich_so_du_tks_ngay, percentage=0_5)",
+                      "expression": "APPROX_PERCENTILE(`ty_le_chuyen_dich_so_du_tks_ngay`, 0.5)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Tỉ lệ chuyển dịch số dư tiết kiệm số",
+                "headerAlignment": "center"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "approx_percentile(ty_le_chuyen_dich_so_du_tks_ngay, percentage=0_5)",
+                  "format": {
+                    "type": "number-percent",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 1,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "chuyen-dich-so-luong-so-tks-mo-moi",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "5c75bc6f",
+                  "fields": [
+                    {
+                      "name": "CST_GRP",
+                      "expression": "`CST_GRP`"
+                    },
+                    {
+                      "name": "sum(DS_TLCD_SLS)",
+                      "expression": "SUM(`DS_TLCD_SLS`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Chuyển dịch số lượng sổ TKS mở mới"
+              },
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "CST_GRP",
+                  "axis": {
+                    "hideTitle": true,
+                    "labelAngle": 0
+                  },
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(DS_TLCD_SLS)",
+                  "axis": {
+                    "hideTitle": true
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 3,
+            "width": 4,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "f5c6693c",
+            "multilineTextboxSpec": {
+              "lines": [
+                "![](data:image/png;base64,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) "
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 2,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "45cbc062",
+            "multilineTextboxSpec": {
+              "lines": [
+                "<span style=\"text-align:center;display:block;\"><span style=\"color:#0C13D2\">**BÁO CÁO CHUYỂN DỊCH TIẾT KIỆM SỐ**</span></span>"
+              ]
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 0,
+            "width": 7,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "chuyen-dich-so-du-tiet-kiem-so1",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "5c75bc6f",
+                  "fields": [
+                    {
+                      "name": "CST_GRP",
+                      "expression": "`CST_GRP`"
+                    },
+                    {
+                      "name": "sum(SoDu_Per_TKS)",
+                      "expression": "SUM(`SoDu_Per_TKS`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Chuyển dịch số dư tiết kiệm số"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "CST_GRP",
+                  "axis": {
+                    "hideTitle": true
+                  },
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(SoDu_Per_TKS)",
+                  "axis": {
+                    "hideTitle": true
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "label": {
+                  "show": false
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 7,
+            "width": 4,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "chuyen-dich-khach-hang-tks-1",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "5c75bc6f",
+                  "fields": [
+                    {
+                      "name": "CST_GRP",
+                      "expression": "`CST_GRP`"
+                    },
+                    {
+                      "name": "sum(SoDu_Per_KH)",
+                      "expression": "SUM(`SoDu_Per_KH`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Chuyển dịch khách hàng TKS"
+              },
+              "widgetType": "area",
+              "encodings": {
+                "x": {
+                  "fieldName": "CST_GRP",
+                  "axis": {
+                    "hideTitle": true,
+                    "labelAngle": 0
+                  },
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(SoDu_Per_KH)",
+                  "axis": {
+                    "hideLabels": false,
+                    "hideGrid": false,
+                    "hideTitle": true
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 7,
+            "width": 4,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "b3dfe7b9",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "5c75bc6f",
+                  "fields": [
+                    {
+                      "name": "CST_GRP",
+                      "expression": "`CST_GRP`"
+                    },
+                    {
+                      "name": "sum(SoDu_TKS_SoDu)",
+                      "expression": "SUM(`SoDu_TKS_SoDu`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Chuyển dịch số lượng số TKS"
+              },
+              "widgetType": "area",
+              "encodings": {
+                "x": {
+                  "fieldName": "CST_GRP",
+                  "axis": {
+                    "hideTitle": true,
+                    "labelAngle": 0
+                  },
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(SoDu_TKS_SoDu)",
+                  "axis": {
+                    "hideTitle": true
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 7,
+            "width": 4,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "c0d02e7c",
+            "multilineTextboxSpec": {
+              "lines": [
+                "<span style=\"text-align:right;display:block;\">![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKoAAABHCAYAAACXrNzeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAABSiSURBVHhe7Z35d1Pnmcf778yZ+a2/zJnpnHSmPac9w5k07SRtEjJpkoYlZCHECWtYAiWsiUlCwmYCBoyxwTYQG2OzY4z3DS+yJVv7vu/b1b2fOe+VDFQ0AYxMsazvOc8xkqx7hfTR8z7bff0zSipqKTJMjspc+0HiWqPE9abCmzj25XMSmsEMcib/FRRGP8u/o6TikmkyQ2t9mounJVrqCm/iuM21EkOdGZLx/LMXTiVQi1jhoMK1xjTNp9NcapAKbq31EhdqJIa6JFLJ/LMXViVQi1TpNPTcFCDNIqS1afraBaRK/ukLrhKoRShFAc2dDE2nHgSsECYgFct9b5tEKjX7kAqVQC1CWQ0ylxrStNY9CFkhrPm0RO9NiXjk6UAqVAK1yBTwydy4kE2e8gErhDWdStN5VSIefXqQCpVALSJJaYXetjQXah8E7Iktt9x3XJGIx54upDJKCdRikYhLxwezCY6IIR8A7QksG5Om6b4uPKmcf+pZU1rOYEz46QwZS6AWi2ymDC1n0mptMx+0JzXhocVyHwk9HU+akCUmYx6u+rVUOXs54ewtgVoMioQV2lqySU4+ZE9qok56qyVNODj7njQmpxmPubjgHaPK0csxRw+Vjm5qXf0lUOe6ZBlG+gSkha2XTpegbrWmZ92ThqQEdyJ2zntGOGLr4pijW/WkJ519HHf0lEAtBnmdClfOZduZ+bA9iYmYtL1VIuibHUhlRcGdjtAbtnDWM6x6TmECzvutBGqRaKQvU/DuU3NNmrbmNAHv7EBqSwZpC+o57RpUl3dhVXmAlkAtIqWTCrcvZ5fofNhmauJYNy5IBLyFjUklRcaSDHDZP6ECKLznCUfvjwJaArWI5LbJtNYVrhwlmgRtFyX8nsJBGs2k0MXdXPKNq2AesXepP/OB/DErgVoEMk/JNFUXZtkXydjNZgmPszCQBqQ4w1G7msELMFUPmkuQHsdKoBaBrEZZLfDnQ/e4JspaYvi5EJAGpQTdQRNnXIMqZCL+nAmgJVCLSJGQrE7YXzzzIHyPauK5V89LuGwzh1RWZFypCN0hE6dc/eryLgCbLjE9iZVALRKJeVBRlM8H8FFMxKTi8hSnbWbZfUrOYEr4aQtMUesa4Iiji+POngdgexIrgVokshpm1jqd9qQO8+N70qQsqQmSyOBP5TJ4scTnQ1YIK4FaJJLS0N/+eCUq4UkvN6SxGx8P0ricRhNz0eQdpVKNP7vVVmc+XIW0EqhFJNGHF+N3IgT4Kc863Ra9fC6NRf/okIoMXrQ4Gz2jHHV0c9QuWpwPQjUbVgK1yCQu5BvszKhT/dPACjBVq8sCKjpOAmjnIyROCgr2ZEhNkM6579zXQZpdD5pvJVCLUOKaetEEGOzMxp8tdSJ2TavLfNc1CfNUhkT8pxMnAWi2g6TllLOfSnu3Cks+QE/LSqAWscQQdSKeDQnCAYVEVCHzkI0hknIGc8KvJkgCDrG8P04HabZshqAqjF5xU9kUZqZXI8juGEcrnAy6Hr78PItS5CTN9U4au+LM8C1ASSVprnFyYTQ142MUSmLEbizqpNU3oYJ5VLQ4n/Ly/lM2I1Az4SjXb7lpbXYzbkrlP/xIUmJJmqotHDwXJJ3/4ByQ1xDg2nUPN2/50AdngpmC2xako81DR2cI30M83WxJdJD6w1bOeUY4LgCdYYtztu0eqPEULee9XBgX2KS53Ojlhz6x7YXE7YtedpW7OdIUJpRzgFZtmA5tUlxxRcAU5sQhP6Y0ZFxJzp3yMebPfnh+Q4i9+32MmFPYdCG+OeBD681+KklHlOauqPrvdChG7SEfQ8LDpjK01njpssrC7dBS62H7Fy7OtCfIbsSRVl9T+V4vBw57+OKgj9t3wly96KP2Ziz7AmWJjnoPZ7qzXyRLn5+vvnRx4GwYuzXKmVNe9nztZm91AEPkPq8ejdNw1M2uQz4mQhnSwRin93u4OpXGa4pwcr+POy5ZHVR2jEe4pUuqS6xrPMi3dUECikzEHOb48QDWWPa4/qkIFUc8fPm1m8oLobvvYcwZ5liFm70nAljTCniiHDjo4ebILG83ol7mkWYobKPWOaiWmNQO0jOwxP+Y3QM1EWPj+yP88gUTk+k0VeumKG8L0XXWzNK1Fg6fcLBysxmTenlsim/KNCzb7EJgERrx8up/DfJqRQjZE+Qvy3TcNudA7fPyh5emuB6USfS6ef4VI23qVI7Eub1TLHzbhEvc8oVZ/bshntvgIhWLs/ZjLec6Y1w4pmfZZjuH99nYcsSLSTCuhNmxY4pV7+lY8Ds973xuovykjYqV4/z7/04yFIWMxs5zvx5mxw8RXHc8fPy+nn0VDj753EhLR5ANSyYpO+SnfK2Wd/Z7s59ePMWh8kk++dLBvl0G/vyZFZPOz6KXxyhvTxLQe3npdR3NakknSfn6cd5e5RLfVaxdNn758yG2XIkSHvGw+GMzAzkiQxoXi1/Ssafez9ZVE6w9EMATjlK+dpLNFS52rZ/kgz1eHJYIi17U8m3HzFapR5UnFaXVN363xZkPxbNo9y39SeoPmPjrR1rWVwfoqXMzqAuwbv0UTVMSJJPcbA2i8YNk8tF0yc3+Cgu3PMITRDh6ysii9800dLrZc8qGfXoi3Ck+UCM7G4LU7bXzyVceLII1V4jm626OVpg5rc1AKkXTeSOLPzJyvNlDxQUb7a1uvthgoV98GwIxGi6FsKneTyEpK0QGHKz/zI1ZfHXSKXq+M7Nl2yRrv7FSe8zE6oNGbvTEaK3Ss/F8OPcxyaSSMqe3m9hSE6Rim46VVX71keCQm7VrrGjVWzE2L53iWm+YryuNNGtlSEbZ3WBHLCRJnZ/mG24OfWujO6aQnPBTs3mSJdustF73UH3Jh1HlLcNwq4Plr01xrCdOYCTAyjUmqn4ws2SrI0dOmJUbDFweT3F2n41L7txLnQWJUlOD+466xD+tGmgh7D5QE1TvszDS5+e7z/Us+9BE33iAsvV62jyQMXn5/YIJLroluirMLFlm4Fe/G2e/WFpDEY63+ujq8vNJmYY3d9vw5+I2xZVg+4dTvLPDxdYyI4t2eAiI3eUuWHnnLQML/jTO6uqQ6qUbGl20aaLsWqPh1V0Wupsd7NpgxyQ+y+s2nnvZQIfnXjDn7XKwer2LSfVUEte+sdI74GPt4nF2XwxQXW+m7laUxu/17LiRDTGyL0rh5CY9r6528lVVALeUvdvV5eDTtQ71iyTej/IVetq6guzYZ+CCXoFMlM+r7VhkibYjRha9aeC3f9RyoDtBSufjfKWPwTsuPnxtlI11fixq8J3mxjEzL/1Gy6fiXJoQmz8zcbjKxNI9zuyJ/TG27jZwaSzJmb1WWnJ3F1pBKU6da0hNlPJBeNbtHqhSjF2rdDT0pQgOu/ifX41Rb4xz6nMtS3d66Olx8+4nerquu1i33ULV5TBVm/W8vsnJcK+PT7fZGY8r3Dys419eNODIlQMiIwHeeddEr7ip8bGkzEbHYJgvdxv4uilM834LC5eZuT0apnyriVaXgvmqiX9eoKN/NMJ3a3SsOe6j6wcra3a40OagEtI1mnjhZTPdYXHwJN9/PEVVVwyXO0UskmDb+gm2X4wwesHMqyss3OwMcvC4jRuDEXaX6TmiuXcsIckZZcO7WnacC9F3zcmSTy3YXHH2b9WyttJHe6ONlfsddN30sXWLidorYSo3TfL2pw6uXnayaYOdgJKhftUo/7nagyO3qCTNXtYv1tOsjVNTPsWq73yYLD7ef0PLsethzh82sWKbG4crzrqlU1QOFz6zyiiyOjQyFyEVdg/USILDX1v47prY3FKivcHNgFiCAhG++cxM2W4nFy75uFpjY/lO4RVlTB0eVq61UdPsZdtKB71iuY/GOHreiztXUHYNe3nvQxtt2iT6Xg/LVzmor3WwYquTsUiGhCnAujILlS1evlhlp1mTTeZqz3vQhWWSpgBb1lj47EsbzYMxvHfDN4XBFidLVtjpsmdjxorvrOxqimQfTiY4ttXMntYEChKN39t45z0zK7/xMKYJsHW9lSMt93nZnAITfjZ/oOOffj7GkeHsydzDPjatNrNsvY0bk0n6zrl4v9xNGBl7t/g/2ThZ72R5uQtDTEE2h6m/GOFu9DPkZ9UaC+9+ZGHzQQ/23JfNcNvN+tVWPt7tYkTEs7YgH5dZqG0v/Aaj9mSQGmc/J+ZITJpvMypPFa0yMnEVIonWQ0ZeecPE8Z7CQ3NPCndafWifQi25P2xRh0fyAZgrVgJVLSKk6O2L0NpgobYtV95SZMxTSZzhH4co5UvQPRzH4U+RSjxOLVVGOxxmxJwm6k0Tfkg780klKRk1y5/roNbMa1BTGYw9bvYetnD6eoD7QuCHynzDyooPNKz4zk34MZ4Y94WoO2HhRKMX71PodsQzaTXTn61Z0dk00XwQkH5v71RDlyIDVcYxlWDSmCaWljFNJNAaEkxMJTFYJTJpiXFNArNT0KXgmopyqyvCqCObxPjNSTT6FMFcPBz3p5kcT9DTG2fUkCUr7Eky0Bll0hLjdkcMrS6JxZMmqu66rOCzJtFOpPDnjhHyJhkeS+IPpdEPRenuj9J+K8SYI0PQmWJYnySckPFbkmisaQq5L24kk6TedWdO1EyrnX1q2UwMYU+3cevdd7jq16GJOosN1CSVqyZYsNqNx+ln6UIdB2pcvPuGluUVYeRYhDeeH2fz2Rghc4CN6/R88JGJt1aaaDcn6Tig57nXjIzkSmzObgfP/1rDGyvM/GWRjoO3w4w0Wvi330xyPZhhsMrMwoVa3to0Rf2QIFPm9iE9v3jRQL+oxaEwcNrML35vpEMbYsvicV5YbGXFEj1bjvn44aiJ5142onWnOb9Vx4trnfgLmPiroLqfXVCnN0AToYnwnGJSS8y8dgaNGOI+tc0r9gMQKjJQYfyGlXf3WLjW5qTfnHVrV781s+d6ErstyaEdFprsGa6UT7HpfDYubf1mkhV7fFjMTjbsFP2ynBJB1m0wIoog0Qk7f37bjFbj5/1ycxYovYfnXxrj9Y02tLluVFJ0o7613x02ifQH2FnhI4LMqX1TVDTFiPuS2Nwpxrvt7N7kUX934JKFkydEXblwEu1SsZ/TMfuzE6OKwZf7d0cRu6U0+8bUpM+cDKhXEfw9FR2o+ssW/vW3o/z3UiMTuSpUy04Dv37ZyBuLjSxYaKTJmqBug55zuuzjussW/vpXD6N6B59ud3LXqUUDrFlnQKc2t4JsWmykfdDH8j1WPGlQJt0sr3Biv284JTrsZNFX9rsxb6TPz9Z9XoLInPlKy3/8aop1+wOIr5D1to2tGz3q7w1ctlB1PHj3OIWQqKFe90/+w5Op7FSW2FuqS13ixZenLaBXp7ZEWzetPHwZKTpQBxrNrKj2MH7OwrKtLjyyQtOXJvb3izcjQ+U2M3UGiUs7Jll+KIAkpTmxfZLPqkLYx2ys+Mxxd6pLCflZUWZgIphh4oqZt9fY8Bh9vLXSwERYxnLZwsoa39+cPzTg4P922klIaUb7w0xc9bDpay8+JcORLyepvJpA8SUY0cYY7rBR9p4Nt5Sh9YSer08UFlSh4agjC+pTHDwRS7oIN8R5xVxBtaOPFq+GnpAZU8JHKJMg85gDjkUGapJja3T8aa0HdzzGhld1rN1vY/GiKVYeDJEMhnjrJR3bz0ZJeMNsL5vilTf1LN/lxB6TaN9nZMESM0O5CTBbh4uFL2j541+MLCozcVOMiUlJavcYeeVNA68tNdA4ev8giUT7UTO/WTDJ60sNvF1mou64mQULzbSPBdn5no7fL7Kw6PUptlQHicYSHNio5w+vG1m8wUq/6+Ge5XHll+I0zHJCJZZw4TXFOUQydNwuSkoD6ozrRMyNPx1TL61+EhUZqIq6cZj4kzLqsJWkEIvJxHP3KYpCIqGQEqN1QpJCMChz92ZSIZlSkHIlVFlS1L+hFArJxP8mdFKIhDJE/k4NVUoppOIyQfEccaxM9pySpKiPadqDXNOkRXUsK0UhFMzkHb+wGozYVIAKOYwijnUXTEcPp5wDaiJ0K6hX4RQD2Q++OzNXkYH67Ms5EUVTwE3IHkUpReKKX6suw08Cq1jSs+Wjbo7ZezjjGlKPOxC2YkkE1CrDbKkE6jxRJJPKwSquhXr0MEDAKTL0w/ZOFU5xRYDwmtqYG69Y0h8hESqESqDOIyXF1Q9Bgwrg9JIt6pgCxmmb7gipm5s5eu5m6R0hA/q4Tz3GP0IlUOeZxOXQYr8oUbaqdw2p0E4nQtNXnYq261WfjqGITR24Fq3Yf7RKoM5TiY6PJx1VO0DiL5GMRh2MR10Y43686SjSE2bphVYJ1JLmhEqgljQnVAK1pDmhEqjzXKLx4IopjPsUeuwK7RaFDqtCrx1GPAr6IDiiCv6EQiQFCUm9IOKpqwTqPFUyAzq/QvOkQtWIwokRqLrfhrM/s/crnBxVOK1ROK9TuGpU6LIrjLgVJgNgDim4ogrBJOolPaKzJ2fHcwumEqjzTgqWkEKrXuG4AHEYTo1BzU+YeFxY9SicHEF93rFhqLyT/SlArtUoNExA0yTqsa+Z4LZFYdAJE14FY1DBHlHwxFCBjqUV0rKSBfoRVAJ1HkkwMeZROKNRODGsPBTQR7VpiKc9sIBftZw3rh5VqFE9MjRMKDTqFFqm4IpR4aYZOm0w6JSZ8CmYQgrOGPgSEEkpaqghtk4qgTqPpPEKaLJeMR+22bJpb3xqNAvz9Pnvhhi529Ujivo74jm1GqgbVzivVbgwqdBmVkqgzheJhKhmTMSjD8L0rFg+1AJgEV6InyVQ54FEgtOkU9R4Mh+OZ91OjkKdpgTqvJCIS59lT/pTVgJ1nkjUSS8bSqCW9IxL1DfPjmeTqHwI5oKVQJ0n0vlFcnIvo55rVgJ1nmjYnS0BFapm+rStBOq8kMKAM9sizQdgrlgJ1Hkh0cIsgVrSHNCYWPpLoJb0rMsQzHakSslUSc+0AknRM88OiEz32ueSidd9eqwEatFLjNF1WsX0EpzRzD0TXvXseAnUeSExyCy2DBI9/7lq/w9Yd+oFtRBOJgAAAABJRU5ErkJggg==)![](data:image/png;base64,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)</span>"
+              ]
+            }
+          },
+          "position": {
+            "x": 9,
+            "y": 0,
+            "width": 3,
+            "height": 1
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "55ee6d1d",
+      "displayName": "TongQuan 2",
+      "layout": [
+        {
+          "widget": {
+            "name": "5a9f5597",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ff81d2bd",
+                  "fields": [
+                    {
+                      "name": "thoi_gian",
+                      "expression": "`thoi_gian`"
+                    },
+                    {
+                      "name": "sum(tong_so_du_tiet_kiem)",
+                      "expression": "SUM(`tong_so_du_tiet_kiem`)"
+                    },
+                    {
+                      "name": "sum(tong_so_du_tiet_kiem_so)",
+                      "expression": "SUM(`tong_so_du_tiet_kiem_so`)"
+                    },
+                    {
+                      "name": "sum(ty_le_chuyen_dich)",
+                      "expression": "SUM(`ty_le_chuyen_dich`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 1,
+              "frame": {
+                "title": "Chuyển dịch tiết kiệm sổ mở mới",
+                "showTitle": true
+              },
+              "mark": {
+                "layout": "group"
+              },
+              "widgetType": "combo",
+              "encodings": {
+                "x": {
+                  "fieldName": "thoi_gian",
+                  "axis": {
+                    "hideTitle": true
+                  },
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "color": {
+                  "legend": {
+                    "hide": false,
+                    "hideTitle": true,
+                    "position": "right"
+                  }
+                },
+                "y": {
+                  "primary": {
+                    "fields": [
+                      {
+                        "fieldName": "sum(tong_so_du_tiet_kiem)",
+                        "displayName": "Số dư tiết kiệm"
+                      },
+                      {
+                        "fieldName": "sum(tong_so_du_tiet_kiem_so)",
+                        "displayName": "Số dư tiết kiệm số"
+                      }
+                    ]
+                  },
+                  "secondary": {
+                    "fields": [
+                      {
+                        "fieldName": "sum(ty_le_chuyen_dich)",
+                        "displayName": "Tỷ lệ chuyển dịch"
+                      }
+                    ]
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "axis": {
+                    "hideTitle": true
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 1,
+            "width": 12,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "df15baa0",
+            "multilineTextboxSpec": {
+              "lines": [
+                "![](data:image/png;base64,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) "
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 2,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "84c71fcf",
+            "multilineTextboxSpec": {
+              "lines": [
+                "**BÁO CÁO CHUYỂN DỊCH TIẾT KIỆM SỐ**"
+              ]
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 0,
+            "width": 10,
+            "height": 1
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "660f2301",
+      "displayName": "Global Filters",
+      "layout": [
+        {
+          "widget": {
+            "name": "ngay",
+            "queries": [
+              {
+                "name": "dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f10568862a16b0bf0e78a73158e1ce_CDR_DT",
+                "query": {
+                  "datasetName": "9f153370",
+                  "fields": [
+                    {
+                      "name": "CDR_DT",
+                      "expression": "`CDR_DT`"
+                    },
+                    {
+                      "name": "CDR_DT_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "parameter_dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f1056cb365112f8c8328acad22560f_p_date",
+                "query": {
+                  "datasetName": "b9aedf2d",
+                  "parameters": [
+                    {
+                      "name": "p_date",
+                      "keyword": "p_date"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "parameter_dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f105824d1f15fea95d337154dd5172_p_date",
+                "query": {
+                  "datasetName": "c168f30a",
+                  "parameters": [
+                    {
+                      "name": "p_date",
+                      "keyword": "p_date"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "parameter_dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f10583074b1701bea8e0e91cb577eb_p_date",
+                "query": {
+                  "datasetName": "d1933e7a",
+                  "parameters": [
+                    {
+                      "name": "p_date",
+                      "keyword": "p_date"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "parameter_dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f1070201961eeb8e381a2ce6a53c85_p_date",
+                "query": {
+                  "datasetName": "5c75bc6f",
+                  "parameters": [
+                    {
+                      "name": "p_date",
+                      "keyword": "p_date"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "parameter_dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f107c3823d19b08d06eee7ebe3a805_p_date",
+                "query": {
+                  "datasetName": "b22f93ec",
+                  "parameters": [
+                    {
+                      "name": "p_date",
+                      "keyword": "p_date"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Ngày báo cáo"
+              },
+              "selection": {
+                "defaultSelection": {
+                  "values": {
+                    "dataType": "DATE",
+                    "values": [
+                      {
+                        "value": "now/d"
+                      }
+                    ]
+                  }
+                }
+              },
+              "widgetType": "filter-date-picker",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "CDR_DT",
+                    "queryName": "dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f10568862a16b0bf0e78a73158e1ce_CDR_DT"
+                  },
+                  {
+                    "parameterName": "p_date",
+                    "queryName": "parameter_dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f1056cb365112f8c8328acad22560f_p_date"
+                  },
+                  {
+                    "parameterName": "p_date",
+                    "queryName": "parameter_dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f105824d1f15fea95d337154dd5172_p_date"
+                  },
+                  {
+                    "parameterName": "p_date",
+                    "queryName": "parameter_dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f10583074b1701bea8e0e91cb577eb_p_date"
+                  },
+                  {
+                    "parameterName": "p_date",
+                    "queryName": "parameter_dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f1070201961eeb8e381a2ce6a53c85_p_date"
+                  },
+                  {
+                    "parameterName": "p_date",
+                    "queryName": "parameter_dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f107c3823d19b08d06eee7ebe3a805_p_date"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 1,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "san-pham",
+            "queries": [
+              {
+                "name": "dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f10568862a16b0bf0e78a73158e1ce_PD_TP",
+                "query": {
+                  "datasetName": "9f153370",
+                  "fields": [
+                    {
+                      "name": "PD_TP",
+                      "expression": "`PD_TP`"
+                    },
+                    {
+                      "name": "PD_TP_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "parameter_dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f1070201961eeb8e381a2ce6a53c85_p_sp",
+                "query": {
+                  "datasetName": "5c75bc6f",
+                  "parameters": [
+                    {
+                      "name": "p_sp",
+                      "keyword": "p_sp"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "parameter_dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f107c3823d19b08d06eee7ebe3a805_p_sp",
+                "query": {
+                  "datasetName": "b22f93ec",
+                  "parameters": [
+                    {
+                      "name": "p_sp",
+                      "keyword": "p_sp"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Sản phẩm"
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "PD_TP",
+                    "queryName": "dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f10568862a16b0bf0e78a73158e1ce_PD_TP"
+                  },
+                  {
+                    "parameterName": "p_sp",
+                    "queryName": "parameter_dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f1070201961eeb8e381a2ce6a53c85_p_sp"
+                  },
+                  {
+                    "parameterName": "p_sp",
+                    "queryName": "parameter_dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f107c3823d19b08d06eee7ebe3a805_p_sp"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 1,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "khoi",
+            "queries": [
+              {
+                "name": "dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f10568862a16b0bf0e78a73158e1ce_CST_LOB_NM",
+                "query": {
+                  "datasetName": "9f153370",
+                  "fields": [
+                    {
+                      "name": "CST_LOB_NM",
+                      "expression": "`CST_LOB_NM`"
+                    },
+                    {
+                      "name": "CST_LOB_NM_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "parameter_dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f1070201961eeb8e381a2ce6a53c85_p_khoi",
+                "query": {
+                  "datasetName": "5c75bc6f",
+                  "parameters": [
+                    {
+                      "name": "p_khoi",
+                      "keyword": "p_khoi"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "parameter_dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f107c3823d19b08d06eee7ebe3a805_p_khoi",
+                "query": {
+                  "datasetName": "b22f93ec",
+                  "parameters": [
+                    {
+                      "name": "p_khoi",
+                      "keyword": "p_khoi"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Khối"
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "CST_LOB_NM",
+                    "queryName": "dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f10568862a16b0bf0e78a73158e1ce_CST_LOB_NM"
+                  },
+                  {
+                    "parameterName": "p_khoi",
+                    "queryName": "parameter_dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f1070201961eeb8e381a2ce6a53c85_p_khoi"
+                  },
+                  {
+                    "parameterName": "p_khoi",
+                    "queryName": "parameter_dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f107c3823d19b08d06eee7ebe3a805_p_khoi"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 4,
+            "width": 1,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "phan-khuc",
+            "queries": [
+              {
+                "name": "dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f10568862a16b0bf0e78a73158e1ce_CST_GRP",
+                "query": {
+                  "datasetName": "9f153370",
+                  "fields": [
+                    {
+                      "name": "CST_GRP",
+                      "expression": "`CST_GRP`"
+                    },
+                    {
+                      "name": "CST_GRP_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "parameter_dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f1070201961eeb8e381a2ce6a53c85_p_phankhuc",
+                "query": {
+                  "datasetName": "5c75bc6f",
+                  "parameters": [
+                    {
+                      "name": "p_phankhuc",
+                      "keyword": "p_phankhuc"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "parameter_dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f107c3823d19b08d06eee7ebe3a805_p_phankhuc",
+                "query": {
+                  "datasetName": "b22f93ec",
+                  "parameters": [
+                    {
+                      "name": "p_phankhuc",
+                      "keyword": "p_phankhuc"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Phân khúc"
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "CST_GRP",
+                    "queryName": "dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f10568862a16b0bf0e78a73158e1ce_CST_GRP"
+                  },
+                  {
+                    "parameterName": "p_phankhuc",
+                    "queryName": "parameter_dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f1070201961eeb8e381a2ce6a53c85_p_phankhuc"
+                  },
+                  {
+                    "parameterName": "p_phankhuc",
+                    "queryName": "parameter_dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f107c3823d19b08d06eee7ebe3a805_p_phankhuc"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 6,
+            "width": 1,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "nhom-tuoi",
+            "queries": [
+              {
+                "name": "dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f10568862a16b0bf0e78a73158e1ce_GRP_AGE",
+                "query": {
+                  "datasetName": "9f153370",
+                  "fields": [
+                    {
+                      "name": "GRP_AGE",
+                      "expression": "`GRP_AGE`"
+                    },
+                    {
+                      "name": "GRP_AGE_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "parameter_dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f1070201961eeb8e381a2ce6a53c85_p_nhomtuoi",
+                "query": {
+                  "datasetName": "5c75bc6f",
+                  "parameters": [
+                    {
+                      "name": "p_nhomtuoi",
+                      "keyword": "p_nhomtuoi"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "parameter_dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f107c3823d19b08d06eee7ebe3a805_p_nhomtuoi",
+                "query": {
+                  "datasetName": "b22f93ec",
+                  "parameters": [
+                    {
+                      "name": "p_nhomtuoi",
+                      "keyword": "p_nhomtuoi"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Nhóm tuổi"
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "GRP_AGE",
+                    "queryName": "dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f10568862a16b0bf0e78a73158e1ce_GRP_AGE"
+                  },
+                  {
+                    "parameterName": "p_nhomtuoi",
+                    "queryName": "parameter_dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f1070201961eeb8e381a2ce6a53c85_p_nhomtuoi"
+                  },
+                  {
+                    "parameterName": "p_nhomtuoi",
+                    "queryName": "parameter_dashboards/01f1033c25f01ad6b4008182dc04ba2f/datasets/01f107c3823d19b08d06eee7ebe3a805_p_nhomtuoi"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 8,
+            "width": 1,
+            "height": 2
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_GLOBAL_FILTERS"
+    },
+    {
+      "name": "f5dcd443",
+      "displayName": "ChiTiet",
+      "layout": [
+        {
+          "widget": {
+            "name": "76fe692e",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "b22f93ec",
+                  "fields": [
+                    {
+                      "name": "SUB_RGON",
+                      "expression": "`SUB_RGON`"
+                    },
+                    {
+                      "name": "CST_GRP",
+                      "expression": "`CST_GRP`"
+                    },
+                    {
+                      "name": "TERM_TP",
+                      "expression": "`TERM_TP`"
+                    },
+                    {
+                      "name": "AR_RNG",
+                      "expression": "`AR_RNG`"
+                    },
+                    {
+                      "name": "Tong_DS",
+                      "expression": "`Tong_DS`"
+                    },
+                    {
+                      "name": "SLKH",
+                      "expression": "`SLKH`"
+                    },
+                    {
+                      "name": "SLS",
+                      "expression": "`SLS`"
+                    },
+                    {
+                      "name": "DS_SP_Quay_LS_Thuong",
+                      "expression": "`DS_SP_Quay_LS_Thuong`"
+                    },
+                    {
+                      "name": "DS_SP_Quay_LS_Hotline",
+                      "expression": "`DS_SP_Quay_LS_Hotline`"
+                    },
+                    {
+                      "name": "DS_SP_Quay_LS_TyLe_HotLine",
+                      "expression": "`DS_SP_Quay_LS_TyLe_HotLine`"
+                    },
+                    {
+                      "name": "DS_SP_So",
+                      "expression": "`DS_SP_So`"
+                    },
+                    {
+                      "name": "SLKH_SP_So",
+                      "expression": "`SLKH_SP_So`"
+                    },
+                    {
+                      "name": "DS_SP_So_SLS",
+                      "expression": "`DS_SP_So_SLS`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": false
+              },
+              "freezeUpToColumnNumber": 4,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "SUB_RGON",
+                    "useForSearch": false,
+                    "contentAlignment": "left",
+                    "displayName": "Vùng"
+                  },
+                  {
+                    "fieldName": "CST_GRP",
+                    "displayName": "Phân khúc"
+                  },
+                  {
+                    "fieldName": "TERM_TP",
+                    "displayName": "Kỳ hạn"
+                  },
+                  {
+                    "fieldName": "AR_RNG",
+                    "displayName": "Range số"
+                  },
+                  {
+                    "fieldName": "Tong_DS",
+                    "displayName": "Tổng DS"
+                  },
+                  {
+                    "fieldName": "SLKH"
+                  },
+                  {
+                    "fieldName": "SLS"
+                  },
+                  {
+                    "fieldName": "DS_SP_Quay_LS_Thuong"
+                  },
+                  {
+                    "fieldName": "DS_SP_Quay_LS_Hotline"
+                  },
+                  {
+                    "fieldName": "DS_SP_Quay_LS_TyLe_HotLine"
+                  },
+                  {
+                    "fieldName": "DS_SP_So"
+                  },
+                  {
+                    "fieldName": "SLKH_SP_So"
+                  },
+                  {
+                    "fieldName": "DS_SP_So_SLS"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 6,
+            "height": 12
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
